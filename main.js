@@ -32,14 +32,14 @@ function main() {
 	const cubes = []; // array for cubes
 	const loader = new THREE.TextureLoader();
 
-	const brickTexture = loader.load( 'textures/simplebrick.png' );
+	const brickTexture = loader.load( 'textures/brick_wall_09_diff_1k.png' );
 	brickTexture.colorSpace = THREE.SRGBColorSpace;
     brickTexture.magFilter = THREE.NearestFilter;
  
-	const normTexture = loader.load( 'textures/simplebrickNorm.png' );
+	const normTexture = loader.load( 'textures/brick_wall_09_nor_gl_1k.png' );
 	normTexture.magFilter = THREE.NearestFilter;
 
-	const bumpTexture = loader.load( 'textures/simplebrickBump.png' );
+	const bumpTexture = loader.load( 'textures/brick_wall_09_disp_1k.png' );
 	bumpTexture.magFilter = THREE.NearestFilter;
 
 	// CHECKERBOARD FLOOR
