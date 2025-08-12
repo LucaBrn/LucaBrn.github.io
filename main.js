@@ -32,20 +32,20 @@ function main() {
 	const cubes = []; // array for cubes
 	const loader = new THREE.TextureLoader();
 
-	const brickTexture = loader.load( 'simplebrick.png' );
+	const brickTexture = loader.load( 'textures/simplebrick.png' );
 	brickTexture.colorSpace = THREE.SRGBColorSpace;
     brickTexture.magFilter = THREE.NearestFilter;
  
-	const normTexture = loader.load( 'simplebrickNorm.png' );
+	const normTexture = loader.load( 'textures/simplebrickNorm.png' );
 	normTexture.magFilter = THREE.NearestFilter;
 
-	const bumpTexture = loader.load( 'simplebrickBump.png' );
+	const bumpTexture = loader.load( 'textures/simplebrickBump.png' );
 	bumpTexture.magFilter = THREE.NearestFilter;
 
 	// CHECKERBOARD FLOOR
 	const planeSize = 40;
 
-	const floorTexture = loader.load( 'checker.png' );
+	const floorTexture = loader.load( 'textures/checker.png' );
 	floorTexture.wrapS = THREE.RepeatWrapping;
 	floorTexture.wrapT = THREE.RepeatWrapping;
 	floorTexture.magFilter = THREE.NearestFilter;
