@@ -5,7 +5,7 @@ function main() {
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize( 1400, 700 );
+    renderer.setSize( 1000, 500 );
     document.body.appendChild( renderer.domElement );
 
     const fov = 70;
@@ -14,7 +14,7 @@ function main() {
     const far = 100;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
     camera.position.set(0,5.5,5)
-    camera.lookAt(new THREE.Vector3(0,3,0));
+    camera.lookAt(new THREE.Vector3(0,4,0));
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x000000 );
@@ -32,14 +32,14 @@ function main() {
     const cubes = []; // array for cubes
     const loader = new THREE.TextureLoader();
 
-    const brickTexture = loader.load( 'textures/circleText.png' );
+    const brickTexture = loader.load( './textures/simplebrick/diffuse.png' );
     brickTexture.colorSpace = THREE.SRGBColorSpace;
     brickTexture.magFilter = THREE.NearestFilter;
  
-    const normTexture = loader.load( 'textures/circleRedNorm.png' );
+    const normTexture = loader.load( './textures/torusNormal.png' );
     normTexture.magFilter = THREE.NearestFilter;
 
-    const bumpTexture = loader.load( 'textures/circleBump.png' );
+    const bumpTexture = loader.load( './textures/simplebrick/bump3.png' );
     bumpTexture.magFilter = THREE.NearestFilter;
 
     // CHECKERBOARD FLOOR
@@ -63,32 +63,27 @@ function main() {
     mesh.rotation.x = Math.PI * -.5;
     scene.add(mesh);
 
-    // CUBE MATERIALS
+    // CUBE MATERIAL
     const material1 = new THREE.MeshPhongMaterial( {
         map: brickTexture,
         normalMap: normTexture,
     } );
 
-        const material2 = new THREE.MeshPhongMaterial( {
-        map: brickTexture,
-        bumpMap: bumpTexture,
-    } );
-
     // CUBES
-    const cube1 = new THREE.Mesh( geometry, material1 );
-    scene.add( cube1 );
-    cubes.push( cube1 ); // add to cubes list
-    cube1.position.x=3;
-    cube1.position.y=3;
-    cube1.position.z=0;
-
+    const cube = new THREE.Mesh( geometry, material1 );
+    scene.add( cube );
+    cubes.push( cube ); // add to cubes list
+    cube.position.x=0;
+    cube.position.y=4;
+    cube.position.z=0;
+/*
     const cube2 = new THREE.Mesh( geometry, material2 );
     scene.add( cube2 );
     cubes.push( cube2 ); // add to cubes list
     cube2.position.x=-3;
     cube2.position.y=3;
     cube2.position.z=0;
-
+*/
     function resizeRendererToDisplaySize( renderer ) {
 
         const canvas = renderer.domElement;
@@ -108,13 +103,11 @@ function main() {
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
         }
-
-        cubes.forEach( ( anycube ) => {
+            //const speed = 0;
             const speed = .2;
             const rot = time * speed;
             //cube.rotation.x = rot;
-            anycube.rotation.y = rot;
-        } );
+            cube.rotation.y = rot;
 
         renderer.render( scene, camera );
         requestAnimationFrame( render );

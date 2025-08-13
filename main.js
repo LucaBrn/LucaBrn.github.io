@@ -5,7 +5,7 @@ function main() {
 
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize( 1400, 700 );
+    renderer.setSize( 1000, 500 );
     document.body.appendChild( renderer.domElement );
 
 	const fov = 70;
@@ -32,14 +32,14 @@ function main() {
 	const cubes = []; // array for cubes
 	const loader = new THREE.TextureLoader();
 
-	const brickTexture = loader.load( 'textures/brick_wall_09_diff_1k.png' );
+	const brickTexture = loader.load( 'textures/simplebrick/diffuse.png' );
 	brickTexture.colorSpace = THREE.SRGBColorSpace;
     brickTexture.magFilter = THREE.NearestFilter;
  
-	const normTexture = loader.load( 'textures/brick_wall_09_nor_gl_1k.png' );
+	const normTexture = loader.load( 'textures/simplebrick/normal3.png' );
 	normTexture.magFilter = THREE.NearestFilter;
 
-	const bumpTexture = loader.load( 'textures/brick_wall_09_disp_1k.png' );
+	const bumpTexture = loader.load( 'textures/simplebrick/bump3.png' );
 	bumpTexture.magFilter = THREE.NearestFilter;
 
 	// CHECKERBOARD FLOOR
