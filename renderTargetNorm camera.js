@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 //import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 function main() {
 
@@ -8,18 +9,18 @@ function main() {
     const renderTarget = new THREE.WebGLRenderTarget(512, 512, {
         stencilBuffer: false,
     });
-
+    renderer.autoClear = false;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize( 1000, 500 );
     document.body.appendChild( renderer.domElement );
 
-    //CAMERA
+    // CAMERA //
     const fov = 70;
     const aspect = 1; // the canvas default
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-    camera.position.set(0,5.5,5)
+    camera.position.set(0, 5.5, 5)
     camera.lookAt(new THREE.Vector3(0,4,0));
 
     // FAKE CAMERA //
@@ -56,14 +57,18 @@ function main() {
     }
  
     const gui = new GUI();
-    gui.add(fakeCamera, 'fov', 10, 100).onChange(updateCamera);
+    gui.add(fakeCamera, 'fov', 5, 100).onChange(updateCamera);
     const torusGUIHelper = new MinMaxGUIHelper(fakeCamera, 'near', 'far', 0.1);
     gui.add(torusGUIHelper, 'min', 0.1, 10, 0.1).name('near').onChange(updateCamera);
     gui.add(torusGUIHelper, 'max', 9, 10, 0.1).name('far').onChange(updateCamera);
 
+    const controls = new OrbitControls( camera, renderer.domElement );
+	controls.target.set( 0, 4, 0 );
+	controls.update();
+
     
     const loader = new THREE.TextureLoader();
-    //SCENE
+    // SCENE //
     const scene = new THREE.Scene();
 
     const bgTexture = loader.load('textures/background/monument_valley.jpg');
@@ -71,9 +76,13 @@ function main() {
     scene.background = bgTexture;
     //scene.background = new THREE.Color( 0x000000 );
 
-    //FAKE SCENE
+    // FAKE SCENE //
     const fakeScene = new THREE.Scene();
     fakeScene.background = new THREE.Color( 0x8080FF );
+
+    // OVERLAY SCENE //
+    const overlayScene = new THREE.Scene();
+    const overlayCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     // LIGHTING
     const color = 0xFFFFFF;
@@ -83,20 +92,28 @@ function main() {
     light.distance = 0;
     scene.add(light);
 
-    //TORUS
-    const normalMaterial = new THREE.MeshNormalMaterial();
+    const aLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+    scene.add( aLight );
 
-    const torusGeometry = new THREE.TorusGeometry(2, 1, 16, 100);
-    const torus = new THREE.Mesh( torusGeometry, normalMaterial );
+    // TORUS //
+    const torus = new THREE.Mesh( new THREE.TorusGeometry(2, 1, 16, 100), new THREE.MeshNormalMaterial() );
     
     fakeScene.add( torus );
     torus.position.y=-10;
 
+    // HUD //
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: renderTarget.texture,
+        depthTest: false,
+        //transparent: true,
+    }));
+    sprite.scale.set(0.4, 0.8, 1);
+    sprite.position.set(0.7, -0.5, 0);
+    overlayScene.add(sprite);
+
     // CHECKERBOARD FLOOR
     const planeSize = 40;
 
-    
-    
     const floorTexture = loader.load( 'textures/checker.png' );
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
@@ -117,9 +134,7 @@ function main() {
 
     
     //CUBE
-    const geometry = new THREE.BoxGeometry( 3, 3, 3);
-
-    const cubes = []; // array for cubes
+    //const cubes = []; // array for cubes
 
     const brickTexture = loader.load( './textures/simplebrick/diffuse.png' );
     brickTexture.colorSpace = THREE.SRGBColorSpace;
@@ -132,12 +147,12 @@ function main() {
     } );
 
     // CUBES
-    const cube = new THREE.Mesh( geometry, cubeMaterial );
+    const cube = new THREE.Mesh( new THREE.BoxGeometry( 3, 3, 3), cubeMaterial );
     scene.add( cube );
-    cubes.push( cube ); // add to cubes list
-    cube.position.x=0;
+    //cubes.push( cube ); // add to cubes list
+    //cube.position.x=0;
     cube.position.y=4;
-    cube.position.z=0;
+    //cube.position.z=0;
 
 
     function resizeRendererToDisplaySize( renderer ) {
@@ -154,7 +169,7 @@ function main() {
 
     function render( time ) {
 
-        time *= 0.001;
+        //time *= 0.001;
 
         const canvas = renderer.domElement;
         const canvasAspect = canvas.clientWidth / canvas.clientHeight;
@@ -173,18 +188,16 @@ function main() {
             camera.updateProjectionMatrix();
         }
 
-        //const speed = 0;
-        const speed = .2;
-        const rot = time * speed;
-        //cube.rotation.x = rot;
-        cube.rotation.y = rot;
-
         renderer.setRenderTarget(renderTarget);
         renderer.render( fakeScene, fakeCamera );
 		renderer.setRenderTarget( null );
 
         renderer.render( scene, camera );
+        renderer.clearDepth();
+        renderer.render(overlayScene, overlayCamera);
+
         requestAnimationFrame( render );
+        controls.update();
 
     }
 

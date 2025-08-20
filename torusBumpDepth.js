@@ -11,15 +11,15 @@ function main() {
 	const fov = 45;
 	const aspect = 1; // the canvas default
 	const near = 0.1;
-	const far = 9.2;	//IMPORTANT!
+	const far = 10;	//IMPORTANT!
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 	camera.position.set(0, 0, 10)
     camera.lookAt(new THREE.Vector3(0,0,0));
 
 	const scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x8080FF );
+    scene.background = new THREE.Color( 0xffffff );
 
-	const material = new THREE.MeshNormalMaterial();
+	const material = new THREE.MeshDepthMaterial();
 
 	const radius = 2;
 	const tube = 1;

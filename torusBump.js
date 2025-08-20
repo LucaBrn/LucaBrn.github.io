@@ -11,15 +11,23 @@ function main() {
 	const fov = 45;
 	const aspect = 1; // the canvas default
 	const near = 0.1;
-	const far = 9.2;	//IMPORTANT!
+	const far = 10;	//IMPORTANT!
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 	camera.position.set(0, 0, 10)
     camera.lookAt(new THREE.Vector3(0,0,0));
 
 	const scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x8080FF );
+    scene.background = new THREE.Color( 0x000000 );
 
-	const material = new THREE.MeshNormalMaterial();
+	const color = 0xFFFFFF;
+	const intensity = 200;
+	const light = new THREE.DirectionalLight(color, intensity);
+	light.position.set(0, 0, 10);
+	light.target.position.set(0, 0, 0);
+	scene.add(light);
+	scene.add(light.target);
+
+	const material = new THREE.MeshPhongMaterial( { color: 'rgba(0, 0, 0, 1)' } );
 
 	const radius = 2;
 	const tube = 1;
