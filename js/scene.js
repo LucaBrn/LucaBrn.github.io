@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -35,6 +35,12 @@ function main() {
     scene.add(aLight);
 
     const normScale = new THREE.Vector2(0, 0);
+
+    let isFlatShaded = false;
+
+    const settings = {
+        flatShading: isFlatShaded,
+    };
 
     // FLOOR
     const planeSize = 40;
@@ -257,13 +263,23 @@ function main() {
 
     {
         const Mfolder = gui.addFolder('materials');
+        Mfolder.add(settings, 'flatShading').onChange(value =>{
+            isFlatShaded = value;
+
+            scene.traverse((child) => {
+                if(child.isMesh && child.material){
+                    child.material.flatShading = isFlatShaded;
+                    child.material.needsUpdate = true;
+                }
+            })
+        });
         Mfolder.add(params, 'normalScale_x', 0, 5, 0.1).onChange((value) => {
             normScale.x = value;
-        })
+        });
 
         Mfolder.add(params, 'normalScale_y', 0, 5, 0.1).onChange((value) => {
             normScale.y = value;
-        })
+        });
     }
 /*    
     {

@@ -180,10 +180,9 @@ function main() {
     // CUBES
     const cube = new THREE.Mesh( new THREE.BoxGeometry( 3, 3, 3), cubeMaterial );
     scene.add( cube );
-    //cubes.push( cube ); // add to cubes list
-    //cube.position.x=0;
+
     cube.position.y=4;
-    //cube.position.z=0;
+    
 
     // GUI //
     const gui = new GUI();

@@ -24,15 +24,30 @@ function main() {
     const scene = new THREE.Scene();
     //scene.background = new THREE.Color( 0x8080FF );
 
+    // LIGHTING
+    const light = new THREE.PointLight(0xFFFFFF, 400);
+    light.position.set(-10, 0, 10);
+    light.distance = 0;
+    scene.add(light);
+
+    const aLight = new THREE.AmbientLight;
+    scene.add(aLight);
+
+    const normScale = new THREE.Vector2(0, 0);
+
     const loader = new THREE.TextureLoader();
-    const brickTexture = loader.load( './textures/simplebrick/diffuse.png' );
+    const brickNorm = loader.load( './textures/simplebrick/normal.png' );
     const brickDispl = loader.load( './textures/simplebrick/displacement.png' );
 
-    const material = new THREE.MeshNormalMaterial({
-        //color: 0xffff00,
+    const material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color( 0xFF6A00 ),
         //map: brickTexture,
         displacementMap: brickDispl,
-        displacementBias: -1,
+        displacementScale: 0,
+        displacementBias: 0,
+        normalMap: brickNorm,
+        normalScale: normScale,
+
         side: THREE.DoubleSide,
     });
 
@@ -49,11 +64,44 @@ function main() {
 
     const gui = new GUI();
 
+    const params = {
+        normalScale_x: normScale.x,
+        normalScale_y: normScale.y,
+    }
+
+    {
+        const Lfolder = gui.addFolder('light');
+        Lfolder.add(light, 'intensity', 0, 500, 10);
+        Lfolder.add(light.position, 'x', -10, 10);
+        Lfolder.add(light.position, 'z', -10, 10);
+        Lfolder.add(light.position, 'y', -10, 10);
+    }
+
+    const materialSettings = {
+        metalness: material.metalness,
+        roughness: material.roughness,
+    }
+
     {
         const Mfolder = gui.addFolder('material');
         Mfolder.add(material, 'wireframe');
+
+        Mfolder.add(materialSettings, 'metalness', 0, 1).onChange((value)=>{
+            material.metalness = value;
+        })
+        Mfolder.add(materialSettings, 'roughness', 0, 1).onChange((value)=>{
+            material.roughness = value;
+        })
+
         Mfolder.add(material, 'displacementScale', 0, 1, 0.01)
         Mfolder.add(material, 'displacementBias', -1, 1, 0.01)
+        Mfolder.add(params, 'normalScale_x', 0, 5, 0.1).onChange((value) => {
+            normScale.x = value;
+        });
+
+        Mfolder.add(params, 'normalScale_y', 0, 5, 0.1).onChange((value) => {
+            normScale.y = value;
+        });
         Mfolder.open()
     }
 
@@ -98,13 +146,7 @@ function main() {
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
         }
-/*
-            const speed = .2;
-            const rot = time * speed;
-            torus.rotation.x = rot;
-            torus.rotation.y = rot;
-            torus.rotation.z = rot;
-*/
+
         renderer.render( scene, camera );
         requestAnimationFrame( render );
 
