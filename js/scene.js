@@ -45,16 +45,7 @@ function main() {
     // FLOOR
     const planeSize = 40;
     const floorTextureDiff = loader.load( 'textures/imported/wood_0066_color_1k.jpg' );
-    //const floorTextureNorm = loader.load( 'textures/imported/wood_0066_color_1k.jpg' );
-/*
-    floorTexture.wrapS = THREE.RepeatWrapping;
-    floorTexture.wrapT = THREE.RepeatWrapping;
-    floorTexture.magFilter = THREE.NearestFilter;
-    floorTexture.colorSpace = THREE.SRGBColorSpace;
 
-    const repeats = planeSize / 2;
-    floorTexture.repeat.set(repeats, repeats);
-*/
     const planeGeo = new THREE.PlaneGeometry(planeSize, planeSize);
     const planeMat = new THREE.MeshStandardMaterial({
         map: floorTextureDiff,
@@ -118,7 +109,6 @@ function main() {
         normalScale: normScale,
 
         roughness: 0.2,
-        //metalness:
     }));
 
     scene.add(orangePeel, orangeSide);
@@ -281,15 +271,7 @@ function main() {
             normScale.y = value;
         });
     }
-/*    
-    {
-        const Mfolder = gui.addFolder('materials');
 
-        Mfolder.add(normScale, 'normalScale', (0,0), (1,1), (0.1,0.1));
-
-        Mfolder.open();
-    }
-*/
     // CAMERA CONTROLS //
     const controls = new OrbitControls( camera, renderer.domElement );
 	controls.target.set( 0, 13, 0 );
@@ -337,3 +319,84 @@ function main() {
 }
 
 main();
+
+class HudImage {
+    constructor(src, key){
+        this.key = key;
+        this.img = new Image();
+        this.img.src = src;
+
+        Object.assign(this.img.style, {
+            position: 'fixed',
+            top: '20px',
+            left: '20px',
+            maxWidth: '25vw',
+            display: 'none',
+            pointerEvents: 'none',
+        });
+
+        document.body.appendChild(this.img);
+    }
+    show(){
+        this.img.style.display = 'block';
+    }
+
+    hide(){
+        this.img.style.display = 'none';
+    }
+
+    isVisible(){
+        return this.img.style.display !== 'none';
+    }
+}
+
+class HudManager {
+    constructor(){
+        this.huds = [];
+        window.addEventListener('keydown', (event) => this.onKeyDown(event));
+    }
+
+    addImage(src, key){
+        const hud = new HudImage(src, key);
+        this.huds.push(hud);
+        return hud;
+    }
+
+    onKeyDown(event){
+        if(event.repeat) return;
+
+        for(const hud of this.huds){
+            if(event.code === hud.key){
+                if(hud.isVisible()){
+                    hud.hide();
+                } else {
+                    this.huds.forEach(h => h.hide());
+
+                hud.show();
+                }
+            }
+        }
+    }
+}
+const hudManager = new HudManager();
+
+hudManager.addImage('textures/imported/plywood_diff_1k.png', 'KeyQ');
+hudManager.addImage('textures/imported/plywood_nor_gl_1k.png', 'KeyA');
+
+hudManager.addImage('textures/imported/food_0023_color_1k.jpg', 'KeyW');
+hudManager.addImage('textures/imported/food_0023_normal_opengl_1k.png', 'KeyS');
+
+hudManager.addImage('textures/imported/food_0001_color_1k.jpg', 'KeyE');
+hudManager.addImage('textures/imported/food_0001_normal_opengl_1k.png', 'KeyD');
+
+hudManager.addImage('textures/imported/paper_0012_color_1k.jpg', 'KeyR');
+hudManager.addImage('textures/imported/paper_0012_normal_opengl_1k.png' , 'KeyF');
+
+hudManager.addImage('textures/imported/fabric_0028_color_1k.jpg', 'KeyT');
+hudManager.addImage('textures/imported/fabric_0028_normal_opengl_1k.png', 'KeyG');
+
+hudManager.addImage('textures/imported/plastic_0022_color_1k.jpg', 'KeyY');
+hudManager.addImage('textures/imported/plastic_0022_normal_opengl_1k.jpg', 'KeyH');
+
+hudManager.addImage('textures/imported/fabrics_0081_color_1k.jpg', 'KeyU');
+hudManager.addImage('textures/imported/fabrics_0081_normal_opengl_1k.png', 'KeyJ');

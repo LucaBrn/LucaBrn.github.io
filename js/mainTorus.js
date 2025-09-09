@@ -129,9 +129,6 @@ function main() {
     mesh.rotation.x = Math.PI * -.5;
     scene.add(mesh);
 
-    
-    //CUBE
-    //const cubes = []; // array for cubes
 
     const brickTexture = loader.load( './textures/simplebrick/diffuse.png' );
     brickTexture.colorSpace = THREE.SRGBColorSpace;
@@ -147,13 +144,11 @@ function main() {
         displacementScale: 0,
     } );
 
-    // CUBES
+    // CUBE
     const cube = new THREE.Mesh( new THREE.BoxGeometry( 3, 3, 3), cubeMaterial );
     scene.add( cube );
-    //cubes.push( cube ); // add to cubes list
-    //cube.position.x=0;
+
     cube.position.y=4;
-    //cube.position.z=0;
 
     // GUI //
     class MinMaxGUIHelper {
@@ -175,7 +170,7 @@ function main() {
         }
         set max(v) {
             this.obj[this.maxProp] = v;
-            this.min = this.min;  // this will call the min setter
+            this.min = this.min;
         }
     }
 

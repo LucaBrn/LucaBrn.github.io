@@ -31,7 +31,7 @@ function main() {
     camera.lookAt(new THREE.Vector3(0,4,0));
 
     // FAKE CAMERA //
-    const fakeCamera = new THREE.PerspectiveCamera( 11, 1, 0.1, 50 );
+    const fakeCamera = new THREE.PerspectiveCamera( 11, 1, 0.1, 15 );
     fakeCamera.position.set(0, 9, 0)
     fakeCamera.lookAt(new THREE.Vector3(0,0,0));
 
@@ -65,16 +65,13 @@ function main() {
     const helper = new THREE.PointLightHelper(light);
     scene.add(helper);
 
-    const aLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+    const aLight = new THREE.AmbientLight( 0x404040 );
     scene.add( aLight );
 
 	// FAKE LIGHTING (2) //
 	const fakeLight = new THREE.PointLight(0xFFFFFF, 200);
 	fakeLight.position.set(0, 10, 0);
-    //fakeLight.distance = 10;
-	//fakeLight.target.position.set(0, 0, 0);
 	fakeScene2.add(fakeLight);
-	//fakeScene2.add(fakeLight.target);
 
     const normScale = new THREE.Vector2(0, 0);
 
@@ -227,6 +224,7 @@ function main() {
         const Tfolder = gui.addFolder('frustum');
         Tfolder.add(fakeCamera, 'fov', 0, 50, 1).onChange(updateCamera);
         Tfolder.add(fakeCamera, 'near', 0.1, 10, 0.1).onChange(updateCamera);
+        Tfolder.add(fakeCamera, 'far', 0.1, 15, 0.1).onChange(updateCamera);
         Tfolder.open();
     }
 
@@ -275,9 +273,7 @@ function main() {
         return needResize;
     }
 
-    function render( time ) {
-
-        //time *= 0.001;
+    function render() {
 
         const canvas = renderer.domElement;
         const canvasAspect = canvas.clientWidth / canvas.clientHeight;
@@ -291,7 +287,6 @@ function main() {
         bgTexture.repeat.y = aspect > 1 ? 1 : aspect;
 
         if ( resizeRendererToDisplaySize( renderer ) ) {
-            //const canvas = renderer.domElement;
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
         }

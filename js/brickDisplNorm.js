@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -13,16 +13,16 @@ function main() {
     //renderer.autoClear = false;
 
     const fov = 45;
-    const aspect = 1; // the canvas default
+    const aspect = 1;
     const near = 0.1;
-    const far = 20;	//IMPORTANT!
+    const far = 20;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-    //const camera = new THREE.OrthographicCamera();
+
     camera.position.set(0, 0, 3)
     camera.lookAt(new THREE.Vector3(0,0,0));
 
     const scene = new THREE.Scene();
-    //scene.background = new THREE.Color( 0x8080FF );
+
 
     // LIGHTING
     const light = new THREE.PointLight(0xFFFFFF, 400);

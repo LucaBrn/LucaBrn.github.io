@@ -24,7 +24,7 @@ function main(){
     light.position.set(-10, 3, 0);
     scene.add(light);
 
-    const aLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+    const aLight = new THREE.AmbientLight( 0x404040 );
     scene.add( aLight );
 
     const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 4);
