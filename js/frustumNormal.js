@@ -1,4 +1,6 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+import * as THREE from 'three';
+
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 function main() {
@@ -10,90 +12,76 @@ function main() {
 	});
 	renderer.setPixelRatio(window.devicePixelRatio);
 
+	const scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0x8080FF );
+
+	// CAMERA //
 	const fov = 45;
-	const aspect = 1; // the canvas default
+	const aspect = 1;
 	const near = 0.1;
 	const far = 100;
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 	camera.position.set(0, 0, 10)
     camera.lookAt(new THREE.Vector3(0,0,1));
 
-	const scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x8080FF );
-
     const controls = new OrbitControls( camera, renderer.domElement );
 	controls.target.set( 0, 0, 0 );
 	controls.update();
-/*
-	// LIGHTING
-	const color = 0xFFFFFF;
-	const intensity = 200;
-	const light = new THREE.PointLight(color, intensity);
-	light.position.set(-5, 3, 5);
-	light.distance = 0;
-	scene.add(light);
 
-	const geometry = new THREE.BoxGeometry( 3, 3, 3);
+	// FRUSTUM //
+	const geometry = new THREE.BufferGeometry();
 
-	// CUBE MATERIALS
-	const material = new THREE.MeshPhongMaterial( {
-		color: 0xff0000
-	} );
+	// 3------2   7---6
+	// |      |   |   |
+	// |      |   4---5
+	// 0------1
+	const vertices = new Float32Array( [
+    	-3.0, -3.0,  0.0, // v0
+    	 3.0, -3.0,  0.0, // v1
+    	 3.0,  3.0,  0.0, // v2
+    	-3.0,  3.0,  0.0, // v3
 
-	// CUBE
-	const cube1 = new THREE.Mesh( geometry, material );
-	scene.add( cube1 );
-*/
-const geometry = new THREE.BufferGeometry();
+    	-1.0, -1.0,  2.0, // v4
+    	 1.0, -1.0,  2.0, // v5
+    	 1.0,  1.0,  2.0, // v6
+    	-1.0,  1.0,  2.0, // v7
 
-// 3------2   7---6
-// |      |   |   |
-// |      |   4---5
-// 0------1
-const vertices = new Float32Array( [
-    -3.0, -3.0,  0.0, // v0
-     3.0, -3.0,  0.0, // v1
-     3.0,  3.0,  0.0, // v2
-    -3.0,  3.0,  0.0, // v3
+	] );
 
-    -1.0, -1.0,  2.0, // v4
-     1.0, -1.0,  2.0, // v5
-     1.0,  1.0,  2.0, // v6
-    -1.0,  1.0,  2.0, // v7
+	const indices = [
 
-] );
+    	4, 5, 6,
+    	6, 7, 4,	//top
 
-const indices = [
-    //2, 1, 0,
-    //0, 3, 2,	//base
+    	7, 6, 2,
+    	2, 3, 7,	//up
 
-    4, 5, 6,
-    6, 7, 4,	//top
+    	1, 5, 4,
+    	4, 0, 1,	//down
 
-    7, 6, 2,
-    2, 3, 7,	//up
+    	4, 7, 3,
+    	3, 0, 4,	//left
 
-    1, 5, 4,
-    4, 0, 1,	//down
+    	2, 6, 5,
+    	5, 1, 2,	//right
 
-    4, 7, 3,
-    3, 0, 4,	//left
+	];
 
-    2, 6, 5,
-    5, 1, 2,	//right
+	geometry.setIndex( indices );
+	geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 
-];
+	geometry.computeVertexNormals();
 
-geometry.setIndex( indices );
-geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+	const material = new THREE.MeshNormalMaterial();
+	const mesh = new THREE.Mesh( geometry, material );
 
-geometry.computeVertexNormals();
+	scene.add( mesh );
 
-const material = new THREE.MeshNormalMaterial();
-const mesh = new THREE.Mesh( geometry, material );
+	const gui = new GUI();
+	const Mfolder = gui.addFolder('material');
+    Mfolder.add(material, 'wireframe');
 
-scene.add( mesh );
-
+	// RENDER //
 	function resizeRendererToDisplaySize( renderer ) {
 
 		const canvas = renderer.domElement;
@@ -113,12 +101,7 @@ scene.add( mesh );
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
 			camera.updateProjectionMatrix();
 		}
-/*
-			const speed = .2;
-			const rot = time * speed;
-			//cube.rotation.x = rot;
-			mesh1.rotation.y = rot;
-*/
+
 		renderer.render( scene, camera );
 		requestAnimationFrame( render );
         controls.update();

@@ -10,7 +10,6 @@ function main() {
         antialias: true,
         canvas,
     });
-    //renderer.autoClear = false;
 
     const fov = 45;
     const aspect = 1;
@@ -71,7 +70,7 @@ function main() {
 
     {
         const Lfolder = gui.addFolder('light');
-        Lfolder.add(light, 'intensity', 0, 500, 10);
+        Lfolder.add(light, 'intensity', 0, 800, 10);
         Lfolder.add(light.position, 'x', -10, 10);
         Lfolder.add(light.position, 'z', -10, 10);
         Lfolder.add(light.position, 'y', -10, 10);

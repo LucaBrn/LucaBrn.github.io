@@ -266,9 +266,7 @@ function main() {
         return needResize;
     }
 
-    function render( time ) {
-
-        //time *= 0.001;
+    function render() {
 
         const canvas = renderer.domElement;
         const canvasAspect = canvas.clientWidth / canvas.clientHeight;

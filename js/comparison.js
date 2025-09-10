@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
@@ -21,20 +21,17 @@ function main() {
     camera.position.set(0, 0, 5);
     camera.lookAt(new THREE.Vector3(0,0,0));
 
-    // LIGHTING
+    // LIGHTING //
     const light = new THREE.PointLight(0xFFFFFF, 300000);
     light.position.set(0, 100, 200);
-    //light.distance = 0;
-    //light.target.position.set(0, 0, 0);
 
     scene.add(light);
-    //scene.add(light.target);
 
     const aLight = new THREE.AmbientLight();
     scene.add(aLight);
 
+    // TEXTURES //
     const loader = new THREE.TextureLoader();
-    const material = new THREE.MeshPhongMaterial;
 
     const simpleBrickTexture = loader.load('textures/simplebrick/diffuse.png');
     simpleBrickTexture.magFilter = THREE.NearestFilter;
@@ -60,8 +57,7 @@ function main() {
     normDXTireTexture.magFilter = THREE.LinearFilter;
     normDXTireTexture.colorSpace = THREE.SRGBColorSpace;
 
-    //CUBES
-    const cubes = []; // array for cubes
+    // CUBES //
     const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
 
     const cube1 = new THREE.Mesh(cubeGeometry, new THREE.MeshPhongMaterial({
@@ -134,8 +130,6 @@ function main() {
     cube9.position.set(-2,200,0);
     cube10.position.set(2,200,0);
 
-    cubes.push(cube1, cube2, cube3, cube4, cube5, cube6, cube7, cube8, cube9, cube10);
-
 
     const textGeometry = new THREE.PlaneGeometry(2,1);
 
@@ -188,16 +182,13 @@ function main() {
 
     const gui = new GUI();
 
-    function updateCamera(){
-        camera.updateProjectionMatrix;
-    }
     const params = {
         targetY: 0
     };
 
     {
         const Cfolder = gui.addFolder('camera');
-        //Cfolder.add(camera.position, 'x', -20, 20);
+
         Cfolder.add(params, 'targetY', 0, 200, 50).onChange((value => {
             const delta = value - controls.target.y;
             controls.target.y += delta;
@@ -205,7 +196,7 @@ function main() {
 
             controls.update();
         }));
-        //Cfolder.add(camera.position, 'z', -20, 20);
+
     }
 
     
@@ -231,21 +222,9 @@ function main() {
         return needResize;
     }
 
-    function render( time ) {
+    function render() {
 
-        time *= 0.001;
-        /*
-        cubes.forEach( ( cube, ndx ) => {
-
-			const speed = 1 + ndx * .1;
-			const rot = time * 1/4;
-			cube.rotation.x = rot;
-			cube.rotation.y = rot;
-
-		} );
-        */
         if ( resizeRendererToDisplaySize( renderer ) ) {
-            //const canvas = renderer.domElement;
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
         }
@@ -253,7 +232,7 @@ function main() {
         renderer.render( scene, camera );
 
         requestAnimationFrame( render );
-        //controls.update();
+        controls.update();
 
     }
 

@@ -50,7 +50,6 @@ function main() {
     const planeMat = new THREE.MeshStandardMaterial({
         map: floorTextureDiff,
         //normalMap: floorTextureNorm,
-        //normalScale: normScale,
 
         roughness: 0.4,
         });

@@ -23,7 +23,7 @@ function main() {
 
     // CAMERA //
     const fov = 70;
-    const aspect = 1; // the canvas default
+    const aspect = 1;
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
@@ -42,7 +42,6 @@ function main() {
     const bgTexture = loader.load('textures/background/monument_valley.jpg');
     bgTexture.colorSpace = THREE.SRGBColorSpace;
     scene.background = bgTexture;
-    //scene.background = new THREE.Color( 0x000000 );
 
     // FAKE SCENE (1) //
     const fakeScene1 = new THREE.Scene();
@@ -142,10 +141,7 @@ function main() {
     mesh.rotation.x = Math.PI * -.5;
     scene.add(mesh);
 
-    
-    //CUBE
-    //const cubes = []; // array for cubes
-
+    // CUBE //
     const brickTexture = loader.load( './textures/simplebrick/diffuse2.png' );
     brickTexture.colorSpace = THREE.SRGBColorSpace;
     brickTexture.magFilter = THREE.NearestFilter;
@@ -163,7 +159,7 @@ function main() {
     displacementTexture.wrapS = THREE.RepeatWrapping;
     displacementTexture.wrapT = THREE.RepeatWrapping;
 
-    // CUBE MATERIAL
+    // CUBE MATERIAL //
     const cubeMaterial = new THREE.MeshPhongMaterial( {
         shininess: 0,
         map: brickTexture,
@@ -174,7 +170,6 @@ function main() {
         displacementScale: 0,
     } );
 
-    // CUBES
     const cube = new THREE.Mesh( new THREE.BoxGeometry( 3, 3, 3), cubeMaterial );
     scene.add( cube );
 

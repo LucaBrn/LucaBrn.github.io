@@ -103,7 +103,7 @@ function main(){
         const Lfolder = gui.addFolder('light');
         Lfolder.add(light, 'intensity', 0, 600, 1);
         Lfolder.add(light.position, 'z', -30, 30);
-        //Lfolder.add(light.position, 'z', -20, 20).onChange(updateLight);
+        //Lfolder.add(light.position, 'x', -20, 20).onChange(updateLight);
         //Lfolder.add(light.position, 'y', 0, 20).onChange(updateLight);
     }
 
