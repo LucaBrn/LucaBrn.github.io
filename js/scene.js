@@ -35,6 +35,7 @@ function main() {
     scene.add(aLight);
 
     const normScale = new THREE.Vector2(0, 0);
+    const bumpScale = 0;
 
     let isFlatShaded = false;
 
